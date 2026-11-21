@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lis l’arabe en jouant</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f1e6;--card:#fffaf0;--ink:#2a2118;--mut:#7a6f60;--ln:#e4d8c3;--o:#c8631a;--g:#1e8e6a;--b:#2b6fd1;--ok:#1e8e6a;--ko:#c0392b;--dk:#2a2118;--dkt:#fffaf0;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17130e;--card:#241e16;--ink:#f2e9da;--mut:#a89c88;--ln:#3a3226;--o:#f08a3c;--g:#38c796;--b:#6aa5ff;--ok:#38c796;--ko:#ff7a6b;--dk:#f2e9da;--dkt:#17130e}}
+:root[data-theme="dark"]{--bg:#17130e;--card:#241e16;--ink:#f2e9da;--mut:#a89c88;--ln:#3a3226;--o:#f08a3c;--g:#38c796;--b:#6aa5ff;--ok:#38c796;--ko:#ff7a6b;--dk:#f2e9da;--dkt:#17130e}
+html,body{height:100%}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:600 15px Nunito,system-ui,sans-serif}
+#app{max-width:520px;margin:0 auto;padding:14px 12px 28px}
+h1{font-size:24px;text-align:center;margin:6px 0 10px;font-weight:800}h1 b{background:var(--o);color:#fff;border-radius:10px;padding:0 9px}
+nav{display:flex;gap:8px;margin-bottom:12px}nav button{flex:1;padding:10px;border:2px solid var(--ln);background:var(--card);color:var(--ink);border-radius:14px;font:inherit;font-weight:800}
+nav button.on{background:var(--dk);color:var(--dkt);border-color:var(--dk)}
+.card{background:var(--card);border:2px solid var(--ln);border-radius:20px;padding:12px}
+.ar{font-family:Amiri,'Noto Naskh Arabic','Traditional Arabic',serif;direction:rtl}
+.row{display:flex;gap:8px;direction:rtl;margin-bottom:10px}
+.lc{flex:1;font-size:40px;line-height:1.5;border:3px solid;border-bottom-width:6px;border-radius:16px;background:var(--card);cursor:pointer;font-family:Amiri,serif}
+.c0{border-color:var(--o);color:var(--o)}.c1{border-color:var(--g);color:var(--g)}.c2{border-color:var(--b);color:var(--b)}
+.lc.on{background:color-mix(in srgb,currentColor 14%,var(--card))}
+.tile{flex:1;border:2px solid;border-radius:16px;padding:6px;text-align:center;direction:ltr}
+.tile.hl{background:color-mix(in srgb,currentColor 18%,var(--card));transform:scale(1.04)}
+.big{font-size:44px;line-height:1.5}
+.mk{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.mk button,.k{border:2px solid var(--ln);background:var(--card);color:var(--ink);border-radius:9px;font:inherit;font-family:Amiri,serif;font-size:20px;line-height:1.3;padding:2px 0;cursor:pointer}
+.mk button.on{background:currentColor;border-color:currentColor}.mk button.on span{color:#fff}
+.word{font-size:58px;line-height:1.6;text-align:center;margin:6px 0 4px}
+.letters{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;direction:rtl;margin:8px 0}
+.letters button{font-size:24px;padding:2px 0}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.btn{border:2px solid var(--dk);background:var(--card);color:var(--ink);border-radius:999px;padding:11px;font:inherit;font-weight:800;cursor:pointer}
+.btn.p{background:var(--dk);color:var(--dkt)}.btn.w{grid-column:1/-1}
+.cnt{display:flex;align-items:center;gap:8px;justify-content:center;margin:2px 0 8px;color:var(--mut)}.cnt button{width:34px;height:34px;border-radius:50%;border:2px solid var(--ln);background:var(--card);color:var(--ink);font:inherit;font-weight:800}
+.lv{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:8px}
+.lv button{flex:0 0 auto;border:2px solid var(--ln);background:var(--card);color:var(--ink);border-radius:12px;padding:6px 10px;font:inherit;text-align:center;font-size:12px}
+.lv button b{display:block;font-size:14px}.lv button.on{border-color:var(--o);background:color-mix(in srgb,var(--o) 14%,var(--card))}.lv button:disabled{opacity:.45}
+.bar{height:10px;border-radius:9px;background:var(--ln);overflow:hidden;margin:4px 0 12px}.bar i{display:block;height:100%;background:var(--g);transition:width .3s}
+.spk{width:96px;height:96px;border-radius:50%;border:0;background:var(--o);color:#fff;font-size:42px;margin:6px auto 10px;display:block;cursor:pointer;box-shadow:0 6px 0 color-mix(in srgb,var(--o) 60%,#000)}
+.ans{min-height:92px;font-size:52px;line-height:1.7;text-align:center;border:3px dashed var(--ln);border-radius:16px;margin-bottom:8px;word-break:break-all}
+.ans.ok{border:3px solid var(--ok);color:var(--ok)}.ans.ko{border:3px solid var(--ko);animation:sh .3s}
+@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.msg{text-align:center;min-height:22px;margin-bottom:6px;font-weight:800}
+.kb{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;direction:rtl;margin-bottom:6px}.kb .k{font-size:24px}
+.km{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px;direction:ltr}.km .k{font-size:26px;background:color-mix(in srgb,var(--b) 10%,var(--card))}
+textarea{width:100%;font-size:28px;line-height:1.7;background:var(--card);color:var(--ink);border:2px solid var(--ln);border-radius:14px;padding:8px;resize:vertical;margin-bottom:6px}
+#toast{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:var(--dk);color:var(--dkt);padding:10px 14px;border-radius:12px;text-align:center;display:none}
+</style></head>
+<body><div id="app"><h1>Lis l’arabe <b>en jouant</b></h1>
+<nav><button data-t="lab">Apprendre</button><button data-t="ex">Exercices</button><button data-t="ed">Mes mots</button></nav><main id="main"></main></div><div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),rnd=a=>a[Math.random()*a.length|0];
+const M={f:'\u064E',k:'\u0650',d:'\u064F',F:'\u064B',K:'\u064D',D:'\u064C',s:'\u0652'},SH='\u0651',LG={f:'ا',k:'ي',d:'و'};
+const AL='ابتثجحخدذرزسشصضطظعغفقكلمنهوي',LT=[...AL].filter(c=>c!='ا');
+const T=s=>s.l+(s.c?SH:'')+(s.v?M[s.v]:'')+(s.m&&LG[s.v]?LG[s.v]:'');
+const norm=s=>s.replace(/\u0640/g,'').replace(/([\u0621-\u064A])([\u064B-\u0652]+)/g,(m,b,k)=>b+[...k].sort().join(''));
+const MK=[['f','ـَ'],['k','ـِ'],['d','ـُ'],['F','ـً'],['K','ـٍ'],['D','ـٌ'],['s','ـْ'],['c','ـّ'],['m','مد']];
+let tab='lab',slots=[{l:'ج',v:'k'},{l:'ش',v:'d'},{l:'ي',v:'f'}],sel=0,toastT;
+function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toastT);toastT=setTimeout(()=>e.style.display='none',3500)}
+function say(arr){const s=window.speechSynthesis;if(!s)return toast('Le son n’est pas disponible sur cet appareil.');s.cancel();
+ if(!s.getVoices().some(v=>/^ar/i.test(v.lang)))toast('Aucune voix arabe détectée : ajoutez-en une dans les réglages de l’appareil.');
+ arr.forEach((t,i)=>{const u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';u.rate=.6;
+  u.onstart=()=>{document.querySelectorAll('.tile').forEach((e,j)=>e.classList.toggle('hl',arr.length>1&&i==j))};
+  u.onend=()=>{if(i==arr.length-1)document.querySelectorAll('.tile').forEach(e=>e.classList.remove('hl'))};s.speak(u)})}
+function lab(){const w=slots.map(T);
+ $('#main').innerHTML=`<section class="card"><div class="row" id="cards">${slots.map((s,i)=>`<button class="lc c${i%3}${i==sel?' on':''}" data-i="${i}">${s.l}</button>`).join('')}</div>
+ <div class="row">${slots.map((s,i)=>`<div class="tile c${i%3}"><div class="ar big">${w[i]}</div><div class="mk">${MK.map(([k,g])=>{const on=k=='c'?s.c:k=='m'?s.m:s.v==k;return`<button data-i="${i}" data-k="${k}" class="${on?'on':''}"><span class="ar">${g}</span></button>`}).join('')}</div></div>`).join('')}</div>
+ <div class="cnt"><button data-n="-1">−</button><span>${slots.length} lettres</span><button data-n="1">+</button></div>
+ <div class="letters">${LT.map(c=>`<button class="k ar" data-l="${c}">${c}</button>`).join('')}</div>
+ <div class="word ar">${slots.map((s,i)=>`<span style="color:var(--${'ogb'[i%3]})">${w[i]}</span>`).join('')}</div>
+ <div class="btns"><button class="btn p" id="r">▶ Lire le mot</button><button class="btn" id="sy">⋯ Syllabe par syllabe</button><button class="btn" id="al">⚄ Au hasard</button><button class="btn" id="ef">🗑 Effacer</button><button class="btn p w" id="go">Passer aux exercices →</button></div></section>`;
+ $('#cards').onclick=e=>{const b=e.target.closest('[data-i]');if(b){sel=+b.dataset.i;lab()}};
+ $('#main').onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+  if(d.k){const s=slots[d.i];if(d.k=='c')s.c=!s.c;else if(d.k=='m')s.m=!s.m;else s.v=s.v==d.k?'':d.k;lab()}
+  else if(d.l){slots[sel].l=d.l;sel=(sel+1)%slots.length;lab()}
+  else if(d.n){const n=slots.length+ +d.n;if(n>=2&&n<=5){n>slots.length?slots.push({l:rnd(LT),v:'f'}):slots.pop();sel=Math.min(sel,n-1);lab()}}};
+ $('#r').onclick=()=>say([w.join('')]);$('#sy').onclick=()=>say(w);
+ $('#al').onclick=()=>{slots=slots.map(()=>({l:rnd(LT),v:rnd('fkdfkdFKDs'),c:Math.random()<.12,m:Math.random()<.15}));lab()};
+ $('#ef').onclick=()=>{slots=slots.map(s=>({l:s.l,v:''}));lab()};$('#go').onclick=()=>show('ex')}
+const LV=[
+{d:'2 lettres',t:'Soukoun',w:['قُلْ','مِنْ','عَنْ','لَمْ','لَنْ','قَدْ','هَلْ','بَلْ','كَمْ','هُمْ','أَنْ','إِنْ','أَمْ','أَوْ','لَوْ','بِهِ','لَهُ','لَكَ']},
+{d:'3 lettres',t:'Voyelles',w:['خَلَقَ','عَلِمَ','كَتَبَ','جَعَلَ','رَزَقَ','ذَكَرَ','شَكَرَ','سَمِعَ','عَمِلَ','فَعَلَ','قَتَلَ','نَزَلَ','خَرَجَ','دَخَلَ','حَمَلَ','رَجَعَ','بَعَثَ','وَجَدَ','وَلَدَ','سَجَدَ','حَسِبَ','كَفَرَ']},
+{d:'3 lettres',t:'Tanwîn',w:['أَحَدٌ','أَبَدًا','رَسُولٌ','لَهَبٍ','مَسَدٍ','كَبَدٍ','عَمَدٍ','عَلَقٍ','طَبَقًا','صُحُفًا','وَسَطًا','عِنَبًا','لُبَدًا','سُرُرٌ','هُدًى','عَلِيمٌ','حَكِيمٌ','قَدِيرٌ','بَصِيرٌ','سَمِيعٌ','خَبِيرٌ','رَحِيمٌ']},
+{d:'4 lettres',t:'Soukoun',w:['نَعْبُدُ','أَعْبُدُ','يَخْرُجُ','يَحْسَبُ','يَشْرَبُ','يَشْهَدُ','أُقْسِمُ','أَرْسَلَ','أَخْرَجَ','أَفْلَحَ','أَكْرَمَ','أَلْهَمَ','يَعْلَمُ','يَسْمَعُ','يَعْمَلُ','يَجْعَلُ','يَذْكُرُ','يَنْظُرُ','يَرْجِعُ','تَعْرِفُ','تَرْهَقُ']},
+{d:'2-3 lettres',t:'Chadda',w:['رَبِّ','ثُمَّ','إِنَّ','كُلُّ','حَقٌّ','جَنَّةٍ','ذَرَّةٍ','صَدَّقَ','كَذَّبَ','قَدَّرَ','عَلَّمَ','حَرَّمَ','سَبَّحَ']},
+{d:'2-3 lettres',t:'Madd',w:['قَالَ','كَانَ','جَاءَ','نَارًا','مَالًا','كِتَابٌ','صَلَاةٌ','زَكَاةٌ','نُورٌ','كَبِيرٌ','طَيْرًا','لَيْسَ','كَيْفَ','يَوْمٍ']}];
+const DEF=LV.map(q=>q.w.slice());
+try{const sv=JSON.parse(localStorage.getItem('qn-words')||'null');if(sv)sv.forEach((a,i)=>{if(LV[i]&&Array.isArray(a)&&a.length)LV[i].w=a})}catch(e){}
+let prog=[0,0,0,0,0,0],lv=0,word='',inp='',st='',fails=0,shown=false;
+try{prog=JSON.parse(localStorage.getItem('qn-prog')||'[0,0,0,0,0,0]')}catch(e){}
+function gen(){const a=LV[lv].w.filter(x=>x!=word);return rnd(a.length?a:LV[lv].w)}
+function newWord(){word=gen();inp='';st='';fails=0;shown=false;ex()}
+function ex(){const done=prog[lv]>=5;
+ $('#main').innerHTML=`<section class="card"><div class="lv">${LV.map((q,i)=>`<button data-lv="${i}" ${i&&prog[i-1]<5?'disabled':''} class="${i==lv?'on':''}"><b>Niveau ${i+1}</b>${q.d}<br>${q.t}${prog[i]>=5?' ✓':''}</button>`).join('')}</div>
+ <div class="bar"><i style="width:${Math.min(100,prog[lv]*20)}%"></i></div>
+ <button class="spk" id="sp" aria-label="Écouter le mot">🔊</button>
+ <div class="ans ar ${st}">${inp||'&nbsp;'}</div>
+ <div class="msg">${st=='ok'?(done?'Niveau réussi ! 🎉':'Bravo !'):st=='ko'?'Essaie encore.':'Écoute ce mot du Coran, puis écris-le avec ses voyelles.'}</div>
+ ${shown?`<div class="ans ar" style="min-height:0;font-size:40px">${word}</div>`:''}
+ <div class="kb">${[...AL+'ىةءأإؤئ'].map(c=>`<button class="k ar" data-c="${c}">${c}</button>`).join('')}</div>
+ <div class="km">${MK.slice(0,8).map(([k,g])=>`<button class="k ar" data-c="${k=='c'?SH:M[k]}">${g}</button>`).join('')}</div>
+ <div class="btns"><button class="btn" id="bs">⌫ Corriger</button><button class="btn" id="cl">🗑 Effacer</button><button class="btn p" id="ck">Vérifier</button><button class="btn" id="nx">${st=='ok'?'Mot suivant →':'Passer'}</button>${fails>1&&!shown?'<button class="btn w" id="rv">Voir la réponse</button>':''}</div></section>`;
+ $('#main').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const d=b.dataset;
+  if(d.lv){lv=+d.lv;newWord()}else if(d.c&&st!='ok'){inp+=d.c;st='';ex()}};
+ $('#sp').onclick=()=>say([word]);
+ $('#bs').onclick=()=>{inp=inp.slice(0,-1);st='';ex()};$('#cl').onclick=()=>{inp='';st='';ex()};$('#nx').onclick=newWord;
+ $('#ck').onclick=()=>{if(!inp)return;if(norm(inp)==norm(word)){st='ok';if(prog[lv]<5)prog[lv]++;try{localStorage.setItem('qn-prog',JSON.stringify(prog))}catch(e){}}else{st='ko';fails++}ex()};
+ const rv=$('#rv');if(rv)rv.onclick=()=>{shown=true;ex()}}
+
+let el=0;
+const parse=v=>[...new Set(v.split(/[\s,؛;]+/).filter(x=>/^[\u0621-\u0652\u0670\u0671]+$/.test(x)))];
+const persist=()=>{try{localStorage.setItem('qn-words',JSON.stringify(LV.map(x=>x.w)))}catch(e){toast('Enregistrement impossible sur ce navigateur : utilise Exporter.')}};
+function edit(){const q=LV[el];
+ $('#main').innerHTML=`<section class="card"><p style="margin:0 0 8px">Ajoute, corrige ou supprime les mots de chaque niveau : un mot par ligne, avec ses voyelles.</p>
+ <div class="lv">${LV.map((x,i)=>`<button data-e="${i}" class="${i==el?'on':''}"><b>Niveau ${i+1}</b>${x.d}<br>${x.t}</button>`).join('')}</div>
+ <textarea id="ta" class="ar" rows="8" dir="rtl">${q.w.join('\n')}</textarea><div class="msg" id="em">${q.w.length} mots</div>
+ <div class="kb">${[...AL+'ىةءأإؤئ'].map(c=>`<button class="k ar" data-i="${c}">${c}</button>`).join('')}</div>
+ <div class="km">${[M.f,M.k,M.d,M.F,M.K,M.D,M.s,SH].map(c=>`<button class="k ar" data-i="${c}">ـ${c}</button>`).join('')}<button class="k" data-i="\n">⏎</button><button class="k" data-i="">⌫</button></div>
+ <div class="btns"><button class="btn p" id="sv">Enregistrer</button><button class="btn" id="df">Mots d’origine</button><button class="btn" id="xp">Exporter</button><button class="btn" id="im">Importer</button></div><input type="file" id="fi" accept=".json" hidden></section>`;
+ const ta=$('#ta'),cnt=()=>$('#em').textContent=parse(ta.value).length+' mots';ta.oninput=cnt;
+ $('#main').onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+  if(d.e){el=+d.e;edit()}
+  else if(d.i!==undefined){if(d.i==='')ta.value=ta.value.slice(0,-1);else ta.setRangeText(d.i,ta.selectionStart,ta.selectionEnd,'end');cnt()}};
+ $('#sv').onclick=()=>{const w=parse(ta.value);if(!w.length)return toast('Ajoute au moins un mot en arabe.');q.w=w;persist();word='';edit();toast(w.length+' mots enregistrés ✓')};
+ $('#df').onclick=()=>{q.w=DEF[el].slice();persist();word='';edit()};
+ $('#xp').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(LV.map(x=>x.w),null,1)],{type:'application/json'}));a.download='mots-arabe.json';a.click()};
+ $('#im').onclick=()=>$('#fi').click();
+ $('#fi').onchange=e=>{const r=new FileReader();r.onload=()=>{try{const a=JSON.parse(r.result);a.forEach((w,i)=>{if(LV[i]&&Array.isArray(w)&&w.length)LV[i].w=parse(w.join(' '))});persist();word='';edit();toast('Mots importés ✓')}catch(x){toast('Fichier non valide.')}};r.readAsText(e.target.files[0])}}
+function show(t){tab=t;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==t));t=='lab'?lab():t=='ed'?edit():(word?ex():newWord())}
+document.querySelector('nav').onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.t)};
+if(window.speechSynthesis)speechSynthesis.getVoices();show('lab');
+</script></body></html>
